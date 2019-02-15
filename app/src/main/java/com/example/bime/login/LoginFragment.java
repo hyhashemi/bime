@@ -52,13 +52,14 @@ public class LoginFragment extends Fragment {
         mTextInputEditTextPassword = mRoot.findViewById(R.id.loginpassword);
         mButton = mRoot.findViewById(R.id.loginbutton);
     }
+
     private void initListener() {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Call<ResponseBody> call = apiInterface.login(mTextInputEditTextUsername.getText().toString(),
-                        mTextInputEditTextPassword.getText().toString() );
+                        mTextInputEditTextPassword.getText().toString());
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -67,9 +68,6 @@ public class LoginFragment extends Fragment {
                             user.setPassword(mTextInputEditTextPassword.getText().toString());
                             user.setUsername(mTextInputEditTextUsername.getText().toString());
 
-                            Intent intent = new Intent(getContext(), MainActivity.class);
-                            startActivity(intent);
-
                         } else {
 
                         }
@@ -77,9 +75,11 @@ public class LoginFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        Log.e("onfail", "onFailure: " );
+                        Log.e("onfail", "onFailure: ");
                     }
                 });
+
+
             }
         });
     }
