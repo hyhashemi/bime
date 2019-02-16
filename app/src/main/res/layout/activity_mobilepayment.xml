@@ -3,8 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/mobilepaymentcontainer"
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mobilepaymentmapview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>

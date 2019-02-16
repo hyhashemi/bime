@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/mapview"
+        android:id="@+id/paymentmapview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </LinearLayout>
