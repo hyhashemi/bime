@@ -3,68 +3,65 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center|top"
-    android:gravity="center"
+    android:gravity="center_horizontal"
+    android:layout_marginTop="60dp"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="100dp"
         android:orientation="horizontal"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/reportmainactivity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:src="@mipmap/ic_launcher"/>
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/report"
+            android:layout_margin="5dp"/>
 
         <ImageView
             android:id="@+id/trackmainactivity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/track"
+            android:layout_margin="5dp"/>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="100dp"
         android:orientation="horizontal"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/mobilepaymentmainactivity"
-            android:layout_width="0dp"
+            android:layout_width="170dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"
-            android:layout_height="wrap_content" />
+            android:src="@drawable/mobilepayment"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"/>
 
         <ImageView
             android:id="@+id/paymentmainactivity"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
             android:gravity="center"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/payment"
+            android:layout_margin="5dp"/>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center">
 
         <ImageView
             android:id="@+id/aboutusmainactivity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
-    </LinearLayout>
+            android:layout_width="170dp"
+            android:layout_centerInParent="true"
+            android:layout_height="100dp"
+            android:src="@drawable/about"
+            android:layout_margin="10dp"/>
+
 
 </LinearLayout>

@@ -60,6 +60,13 @@ public class PaymentActivity extends AppCompatActivity {
                 });
             }
         });
+
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mapView = null;
+    }
 }

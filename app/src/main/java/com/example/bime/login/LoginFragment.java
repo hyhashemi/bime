@@ -68,8 +68,6 @@ public class LoginFragment extends Fragment {
                             user.setPassword(mTextInputEditTextPassword.getText().toString());
                             user.setUsername(mTextInputEditTextUsername.getText().toString());
 
-                            Intent intent = new Intent(getContext(), MainActivity.class);
-                            startActivity(intent);
                         } else {
                             Log.e(String.valueOf(response.code()), "onFailure: ");
                         }
@@ -81,6 +79,9 @@ public class LoginFragment extends Fragment {
                     }
                 });
 
+
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                startActivity(intent);
 
             }
         });

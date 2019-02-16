@@ -2,15 +2,14 @@ package com.example.bime.common;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.example.bime.R;
 import com.example.bime.mobilepayment.MobilePaymentActivity;
 import com.example.bime.payment.PaymentActivity;
-import com.example.bime.report.ReportActivity;
-import com.example.bime.track.TrackActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -41,16 +40,16 @@ public class MainActivity extends AppCompatActivity {
         mReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
+//                startActivity(intent);
             }
         });
 
         mTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), TrackActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), TrackActivity.class);
+//                startActivity(intent);
             }
         });
 
