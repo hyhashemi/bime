@@ -11,7 +11,7 @@ public interface ApiInterface {
 
     @Headers("x-api-key: 676bdb1ce2d84276b8874a41f143c739")
     @FormUrlEncoded
-    @POST("api/user/login")
-    Call<ResponseBody> login(@Field("username") String username, @Field("phone") String password);
+    @POST("api/User/Login")
+    Call<ResponseBody> login(@Field("Username") String username, @Field("Password") String password);
 
 }

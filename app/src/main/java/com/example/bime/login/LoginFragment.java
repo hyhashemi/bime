@@ -2,10 +2,9 @@ package com.example.bime.login;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.example.bime.R;
 import com.example.bime.common.MainActivity;
 import com.example.bime.data.ApiInterface;
 import com.example.bime.data.User;
+import com.google.android.material.textfield.TextInputEditText;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -68,8 +68,10 @@ public class LoginFragment extends Fragment {
                             user.setPassword(mTextInputEditTextPassword.getText().toString());
                             user.setUsername(mTextInputEditTextUsername.getText().toString());
 
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            startActivity(intent);
                         } else {
-
+                            Log.e(String.valueOf(response.code()), "onFailure: ");
                         }
                     }
 

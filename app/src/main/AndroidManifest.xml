@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="false"
@@ -15,7 +16,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data
-            android:name="com.google.android.gms.12.0.1"
+            android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCg_jC8Ue8dbVX7Pst6CVVgX5PgXY4mm74" />
 
         <activity android:name=".Splash">
