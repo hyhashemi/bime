@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import com.example.bime.R;
 import com.example.bime.mobilepayment.MobilePaymentActivity;
 import com.example.bime.payment.PaymentActivity;
+import com.example.bime.track.TrackActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -48,8 +49,8 @@ public class MainActivity extends AppCompatActivity {
         mTrack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(getApplicationContext(), TrackActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getApplicationContext(), TrackActivity.class);
+                startActivity(intent);
             }
         });
 

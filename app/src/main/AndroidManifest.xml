@@ -36,6 +36,7 @@
         <activity android:name=".report.ReportActivity" />
         <activity android:name=".mobilepayment.MobilePaymentActivity" />
         <activity android:name=".payment.PaymentActivity" />
+        <activity android:name=".track.TrackActivity"/>
     </application>
 
 </manifest>
