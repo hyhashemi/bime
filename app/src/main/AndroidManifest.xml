@@ -37,6 +37,7 @@
         <activity android:name=".mobilepayment.MobilePaymentActivity" />
         <activity android:name=".payment.PaymentActivity" />
         <activity android:name=".track.TrackActivity"/>
+        <activity android:name=".aboutus.AboutUsActivity"/>
     </application>
 
 </manifest>

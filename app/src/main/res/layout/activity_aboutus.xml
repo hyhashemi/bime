@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="rtl">
+
+    <include layout="@layout/toolbar_everywhere" android:id="@+id/toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="@dimen/Subtitle2"
+            android:layout_marginRight="@dimen/Subtitle2">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/preference"
+                android:textDirection="rtl"
+                android:textAlignment="viewStart"
+                android:textSize="@dimen/Subtitle2"
+                android:textAppearance="@font/iran_sans_medium"
+                android:layout_margin="@dimen/Subtitle1"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="اگر خسارت خوردیم چه کار کنیم ؟"
+                android:textSize="@dimen/Subtitle1"
+                android:layout_margin="@dimen/Subtitle1"
+                android:textAppearance="@font/iran_sans_medium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/whattodo"
+                android:textSize="@dimen/Subtitle2"
+                android:textAppearance="@font/iran_sans_medium"
+                android:layout_margin="@dimen/Subtitle2"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="نحوه اعلام خسارت آنلاین:"
+                android:layout_margin="@dimen/Subtitle1"
+                android:textSize="@dimen/Subtitle1"
+                android:textAppearance="@font/iran_sans_medium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/howtodo"
+                android:textSize="@dimen/Subtitle2"
+                android:layout_margin="@dimen/Subtitle2"
+                android:textAppearance="@font/iran_sans_medium"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="نسخه 1.0.0"
+                android:textSize="@dimen/Subtitle1"
+                android:textStyle="bold"
+                android:textAppearance="@font/iran_sans_medium"/>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
