@@ -1,4 +1,4 @@
-package com.example.bime.data;
+package com.example.bime.data.model;
 
 public class User {
     private String username;

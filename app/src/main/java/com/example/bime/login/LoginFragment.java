@@ -14,7 +14,7 @@ import android.widget.Button;
 import com.example.bime.R;
 import com.example.bime.common.MainActivity;
 import com.example.bime.data.ApiInterface;
-import com.example.bime.data.User;
+import com.example.bime.data.model.User;
 import com.google.android.material.textfield.TextInputEditText;
 
 import okhttp3.ResponseBody;
