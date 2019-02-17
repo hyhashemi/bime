@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class PaymentActivity extends AppCompatActivity {
 
@@ -28,6 +29,10 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
 
         mapView = findViewById(R.id.paymentmapview);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("مراکز پرداخت خسارت");
+
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override

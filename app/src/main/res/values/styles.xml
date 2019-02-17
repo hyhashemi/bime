@@ -1,11 +1,98 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/colorSecondary</item>
+        <item name="actionBarStyle">@style/ToolbarTheme</item>
     </style>
 
+
+    <style name="TextInputLayoutErrorStyle" parent="TextAppearance.Design.Error">
+        <item name="fontFamily">@font/iran_sans_medium</item>
+        <item name="android:fontFamily">@font/iran_sans_medium</item>
+        <item name="boxStrokeColor">#FF0000</item>
+
+    </style>
+
+    <style name="TextInputLayoutHintStyle" parent="TextAppearance.Design.Hint">
+        <item name="fontFamily">@font/iran_sans_medium</item>
+        <item name="android:fontFamily">@font/iran_sans_medium</item>
+    </style>
+
+    <style name="TextInputLayoutHelperStyle" parent="TextAppearance.Design.HelperText">
+        <item name="fontFamily">@font/iran_sans_medium</item>
+        <item name="android:fontFamily">@font/iran_sans_medium</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TextInputLayoutOutlinedBoxStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="helperTextTextAppearance">@style/TextInputLayoutHelperStyle</item>
+        <item name="errorTextAppearance">@style/TextInputLayoutErrorStyle</item>
+        <item name="hintTextAppearance">@style/TextInputLayoutHintStyle</item>
+    </style>
+
+    <style name="TextInputEditTextStyle" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+        <item name="android:textAppearance">@style/TextAppearanceSubtitle1</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+
+    <style name="TextInputLayoutOutlineBoxStyleGeneral" parent="TextInputLayoutOutlinedBoxStyle">
+        <item name="boxStrokeColor">@color/colorPrimaryDark</item>
+        <item name="android:textColorHint">#FFFFFF</item>
+        <item name="hintTextAppearance">@style/HintTextAppearanceGeneral</item>
+        <item name="helperTextTextAppearance">@style/TextInputLayoutHelperStyle</item>
+        <item name="counterTextAppearance">@style/TextAppearanceSubtitle2</item>
+    </style>
+
+    <style name="HintTextAppearanceGeneral" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="fontFamily">@font/iran_sans_medium</item>
+        <item name="android:fontFamily">@font/iran_sans_medium</item>
+    </style>
+
+    <style name="TextAppearanceBase" parent="TextAppearance.AppCompat.Subhead">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="fontFamily">@font/iran_sans_medium</item>
+        <item name="android:fontFamily">@font/iran_sans_medium</item>
+    </style>
+
+    <style name="TextAppearanceSubtitle1" parent="TextAppearanceBase">
+        <item name="android:textSize">@dimen/Subtitle1</item>
+    </style>
+
+    <style name="TextAppearanceSubtitle2" parent="TextAppearanceBase">
+        <item name="android:textSize">@dimen/Subtitle2</item>
+    </style>
+
+    <style name="TextAppearanceHeader" parent="TextAppearanceBase">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="TabItemTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="fontFamily">@font/iran_sans_medium</item>
+        <item name="android:fontFamily">@font/iran_sans_medium</item>
+        <item name="android:textSize">@dimen/Subtitle1</item>
+    </style>
+
+    <style name="TextAppearanceEyeCatching" parent="TextAppearanceBase">
+        <item name="android:textColor">@color/colorSecondary</item>
+        <item name="android:textSize">@dimen/Subtitle1</item>
+    </style>
+
+    <style name="TextAppearanceNormal" parent="TextAppearanceBase">
+        <item name="android:textColor">@color/colorSecondary</item>
+    </style>
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:titleTextStyle">@style/TextAppearanceSubtitle1</item>
+        <item name="titleTextStyle">@style/TextAppearanceSubtitle1</item>
+    </style>
+
+    <dimen name="Subtitle1">16sp</dimen>
+    <dimen name="Subtitle2">14sp</dimen>
 </resources>

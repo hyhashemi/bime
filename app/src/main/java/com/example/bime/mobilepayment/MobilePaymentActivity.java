@@ -16,6 +16,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 public class MobilePaymentActivity extends AppCompatActivity {
 
@@ -27,6 +28,9 @@ public class MobilePaymentActivity extends AppCompatActivity {
         Mapbox.getInstance(this, getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_mobilepayment);
         mapView = findViewById(R.id.mobilepaymentmapview);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("مراکز پرداخت خسارت سیار");
 
         mapView.getMapAsync(new OnMapReadyCallback() {
             @Override
