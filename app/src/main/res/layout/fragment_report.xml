@@ -9,6 +9,7 @@
         android:layoutDirection="rtl">
 
         <LinearLayout
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
@@ -25,9 +26,11 @@
                     android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
                     android:hint="نام"
+                    android:id="@+id/firstname"
                     android:padding="10dp"/>
 
                 <EditText
+                    android:id="@+id/nationalCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/boxborder"
@@ -36,6 +39,7 @@
                     android:padding="10dp"/>
 
                 <EditText
+                    android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/boxborder"
@@ -44,6 +48,7 @@
                     android:padding="10dp"/>
 
                 <EditText
+                    android:id="@+id/insuranceid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/boxborder"
@@ -52,6 +57,7 @@
                     android:padding="10dp"/>
 
                 <EditText
+                    android:id="@+id/state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/boxborder"
@@ -67,14 +73,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/boxborder"
-                    android:layout_margin="5dp"
-                    android:hint="نام خانوادگی"
-                    android:padding="10dp"/>
-
                 <com.journeyapps.barcodescanner.DecoratedBarcodeView
                     android:id="@+id/qrcodescanner_container"
                     android:layout_width="match_parent"
@@ -83,25 +81,35 @@
                     android:layout_margin="5dp"/>
 
                 <EditText
+                    android:id="@+id/insuranceType"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
-                    android:hint="انتخاب فایل"
+                    android:textDirection="rtl"
+                    android:hint="(شخص ثالث یا بدنه)"
                     android:padding="10dp"/>
 
+                <EditText
+                    android:id="@+id/file"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/boxborder"
+                    android:layout_margin="5dp"
+                    android:textDirection="rtl"
+                    android:hint="انتخاب فایل"
+                    android:padding="10dp"/>
             </LinearLayout>
-
-
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_margin="@dimen/Subtitle2">
+            android:layout_margin="5dp">
 
             <EditText
+                android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_margin="5dp"
@@ -110,6 +118,7 @@
                 android:padding="10dp"/>
 
             <EditText
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_margin="5dp"
@@ -118,6 +127,15 @@
                 android:padding="10dp"/>
         </LinearLayout>
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button"
+            android:text="ارسال"
+            android:textSize="@dimen/Subtitle1"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/buttonbackground"/>
     </LinearLayout>
 
 </ScrollView>

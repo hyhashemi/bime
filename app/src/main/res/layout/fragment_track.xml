@@ -38,6 +38,6 @@
         android:clickable="true"
         android:text="جستجو"
         android:textStyle="bold"
-        android:textSize="20sp"
-        android:textColor="@color/design_default_color_on_primary"/>
+        android:textSize="@dimen/Subtitle1"
+        android:textColor="#FFFFFF" />
 </LinearLayout>
