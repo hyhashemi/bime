@@ -53,8 +53,8 @@ public class PaymentActivity extends AppCompatActivity {
                         mapboxMap.addMarker(markerOptions1);
 
                         CameraPosition position = new CameraPosition.Builder()
-                                .target(new LatLng(35.7, 51.3)) // Sets the new camera position
-                                .zoom(10) // Sets the zoom
+                                .target(new LatLng(35.73, 51.35)) // Sets the new camera position
+                                .zoom(12) // Sets the zoom
                                 .bearing(0) // Rotate the camera
                                 .tilt(0) // Set the camera tilt
                                 .build(); // Creates a CameraPosition from the builder

@@ -35,4 +35,9 @@ public interface ApiInterface {
     Call<ResponseBody> track(@Field("referenceCode") String referenceCode, @Field("nationalCode") String nationalCode);
 
 
+    @Headers("x-api-key: 676bdb1ce2d84276b8874a41f143c739")
+    @FormUrlEncoded
+    @POST("api/Damage/Tracking")
+    Call<ResponseBody> track(@Field("referenceCode") String trackId, @Field("nationalCode") String nationalCode);
+
 }
