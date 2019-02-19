@@ -23,9 +23,10 @@ public interface ApiInterface {
     @GET("api/Inquery")
     Call<ResponseBody> getInfo(@Query("uniqueIdentifier") String uniqueId);
 
-    @Headers("x-api-key: 676bdb1ce2d84276b8874a41f143c739")
+
+    @Headers({"x-api-key: 676bdb1ce2d84276b8874a41f143c739", "Authentication: "})
     @POST("api/Damage/Report")
-    Call<ResponseBody> report(@Body ReportInfo reportInfo );
+    Call<ResponseBody> report(@Body ReportInfo reportInfo);
 
 
     @Headers("x-api-key: 676bdb1ce2d84276b8874a41f143c739")

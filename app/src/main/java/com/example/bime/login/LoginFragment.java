@@ -1,10 +1,14 @@
 package com.example.bime.login;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,12 +25,16 @@ import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
+import java.io.IOException;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import static android.content.Context.MODE_PRIVATE;
 
 public class LoginFragment extends Fragment {
 
@@ -71,13 +79,19 @@ public class LoginFragment extends Fragment {
                             User user = new User();
                             user.setPassword(mTextInputEditTextPassword.getText().toString());
                             user.setUsername(mTextInputEditTextUsername.getText().toString());
+                            String token = response.headers().get("Authorization");
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("token", token);
+                            editor.apply();
+
                             Intent intent = new Intent(getContext(), MainActivity.class);
                             startActivity(intent);
 
                         } else {
                             Snackbar snackbar = Snackbar.make(mRoot, "نام کاربری یا رمز عبور اشتباه است", 3000);
                             View view = snackbar.getView();
-                            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
+                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
                             params.gravity = Gravity.TOP;
                             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
                             view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));

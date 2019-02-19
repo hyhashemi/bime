@@ -2,9 +2,11 @@ package com.example.bime.report;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,6 +42,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -224,9 +229,24 @@ public class ReportFragment extends Fragment {
     }
 
     private void initRetrofit() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String token = preferences.getString("token", null);
+        if(token == null)
+            return;
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request request = chain.request().newBuilder().addHeader("Authorization", token).build();
+                return chain.proceed(request);
+            }
+        });
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://iloss.net/")
                 .addConverterFactory(GsonConverterFactory.create())
+                .client(httpClient.build())
                 .build();
         apiInterface = retrofit.create(ApiInterface.class);
     }
@@ -242,9 +262,9 @@ public class ReportFragment extends Fragment {
         }
         Gson gson = new GsonBuilder().create();
         insuranceInfo = gson.fromJson(data.toString(), InsuranceInfo.class);
-        if (insuranceInfo.getName() != null){
+        if (insuranceInfo.getName() != null) {
             name.setText(insuranceInfo.getName());
-            if (insuranceInfo.getInsuranceField().equals("شخص ثالث")){
+            if (insuranceInfo.getInsuranceField().equals("شخص ثالث")) {
                 spinner.setSelection(1);
             } else
                 spinner.setSelection(0);
