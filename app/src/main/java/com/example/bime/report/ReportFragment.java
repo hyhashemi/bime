@@ -1,25 +1,27 @@
 package com.example.bime.report;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.bime.R;
-import com.example.bime.common.MainActivity;
 import com.example.bime.data.ApiInterface;
 import com.example.bime.data.model.InsuranceInfo;
+import com.example.bime.data.model.ReportInfo;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.ResultPoint;
@@ -107,7 +109,7 @@ public class ReportFragment extends Fragment {
             @Override
             public void barcodeResult(BarcodeResult result) {
 
-                if (result != null) {
+                if (result != null && result.toString().contains("https://SanhabInq.centinsur.ir")) {
                     mDecoratedBarcodeView.pause();
                     String[] resultsplit = result.toString().split("[?]");
                     requestId(resultsplit[1]);
@@ -240,10 +242,17 @@ public class ReportFragment extends Fragment {
         }
         Gson gson = new GsonBuilder().create();
         insuranceInfo = gson.fromJson(data.toString(), InsuranceInfo.class);
-        name.setText(insuranceInfo.getName());
-        spinner.setSelection(Integer.parseInt(insuranceInfo.getInsuranceField()));
-        insuranceId.setText(insuranceInfo.getPolicyUniqueNumber());
-        nationalId.setText(insuranceInfo.getNationalCode());
+        if (insuranceInfo.getName() != null){
+            name.setText(insuranceInfo.getName());
+            if (insuranceInfo.getInsuranceField().equals("شخص ثالث")){
+                spinner.setSelection(1);
+            } else
+                spinner.setSelection(0);
+
+            insuranceId.setText(insuranceInfo.getPolicyUniqueNumber());
+            nationalId.setText(insuranceInfo.getNationalCode());
+        }
+
     }
 
     private void requestReport() {
@@ -253,21 +262,42 @@ public class ReportFragment extends Fragment {
         for (int i = 1; i < fullName.length; i++) {
             lastName += fullName[i];
         }
-        Call<ResponseBody> call = apiInterface.report(firstName, lastName, phoneNumber.getText().toString(),
+
+
+        Call<ResponseBody> call = apiInterface.report(new ReportInfo(
+                firstName, lastName, phoneNumber.getText().toString(),
                 null, address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
-                , desc.getText().toString(), 30, 50, 1, true, 1, "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null);
+                , desc.getText().toString(), 30, 50, 1, true, 1, "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null
+        ));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code() == 200) {
-                    try {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("کد پیگیری");
-                        alertDialog.setMessage(response.body().string());
-                        alertDialog.show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    if (response.code() == 200) {
+                        if (response.body().string().contains("Data\":null")) {
+                            Snackbar snackbar = Snackbar.make(mViewRoot, "با خطا مواجه شد", 3000);
+                            View view = snackbar.getView();
+                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+                            params.gravity = Gravity.TOP;
+                            view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                            view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+                            snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
+                            view.setLayoutParams(params);
+                            snackbar.show();
+                            return;
+                        }
+                        try {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                            alertDialog.setTitle("کد پیگیری");
+                            String[] str = response.body().string().split("[\"]");
+                            alertDialog.setMessage(str[str.length - 2]);
+                            alertDialog.show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
 
