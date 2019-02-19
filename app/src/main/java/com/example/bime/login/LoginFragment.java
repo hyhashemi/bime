@@ -6,15 +6,19 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 
 import com.example.bime.R;
 import com.example.bime.common.MainActivity;
 import com.example.bime.data.ApiInterface;
 import com.example.bime.data.model.User;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import okhttp3.ResponseBody;
@@ -67,9 +71,19 @@ public class LoginFragment extends Fragment {
                             User user = new User();
                             user.setPassword(mTextInputEditTextPassword.getText().toString());
                             user.setUsername(mTextInputEditTextUsername.getText().toString());
+                            Intent intent = new Intent(getContext(), MainActivity.class);
+                            startActivity(intent);
 
                         } else {
-                            Log.e(String.valueOf(response.code()), "onFailure: ");
+                            Snackbar snackbar = Snackbar.make(mRoot, "نام کاربری یا رمز عبور اشتباه است", 3000);
+                            View view = snackbar.getView();
+                            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
+                            params.gravity = Gravity.TOP;
+                            view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                            view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+                            snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
+                            view.setLayoutParams(params);
+                            snackbar.show();
                         }
                     }
 
@@ -78,10 +92,6 @@ public class LoginFragment extends Fragment {
                         Log.e("onfail", "onFailure: ");
                     }
                 });
-
-
-                Intent intent = new Intent(getContext(), MainActivity.class);
-                startActivity(intent);
 
             }
         });

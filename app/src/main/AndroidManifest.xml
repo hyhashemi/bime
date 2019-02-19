@@ -38,6 +38,8 @@
         <activity android:name=".payment.PaymentActivity" />
         <activity android:name=".track.TrackActivity"/>
         <activity android:name=".aboutus.AboutUsActivity"/>
+        <activity android:name=".trackreport.TrackReportActivity"/>
+        <activity android:name=".reportmap.DamageMapActivity"/>
     </application>
 
 </manifest>

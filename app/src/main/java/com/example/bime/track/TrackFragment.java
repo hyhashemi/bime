@@ -1,24 +1,26 @@
 package com.example.bime.track;
 
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.FrameLayout;
 
 import com.example.bime.R;
 import com.example.bime.data.ApiInterface;
+import com.example.bime.trackreport.TrackReportActivity;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -34,16 +36,9 @@ public class TrackFragment extends Fragment {
     private TextInputEditText nationalId;
     private Button button;
     private ApiInterface apiInterface;
-    private TextView address;
-    private TextView insurerDescription;
-    private TextView name;
-    private TextView phoneNumber;
-    private TextView policyFullNumber;
-    private TextView nationalCode;
 
     @Nullable
     @Override
-
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mRoot = inflater.inflate(R.layout.fragment_track, container, false);
         return mRoot;
@@ -55,12 +50,6 @@ public class TrackFragment extends Fragment {
         trackId = mRoot.findViewById(R.id.trackid);
         nationalId = mRoot.findViewById(R.id.trackinternationalid);
         button = mRoot.findViewById(R.id.trackbutton);
-        address = mRoot.findViewById(R.id.address_value);
-        policyFullNumber = mRoot.findViewById(R.id.policyFullNumber_value);
-        insurerDescription = mRoot.findViewById(R.id.desc_value);
-        name = mRoot.findViewById(R.id.name_value);
-        nationalCode = mRoot.findViewById(R.id.nationalcode_value);
-        phoneNumber = mRoot.findViewById(R.id.phonenumber_value);
 
         initRetrofit();
 
@@ -83,27 +72,25 @@ public class TrackFragment extends Fragment {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
+                    String data = "";
                     try {
-                        JSONObject jsonObject = new JSONObject(response.body().toString());
-                        JSONObject data = jsonObject.getJSONObject("Data");
-                        name.setText(data.get("FirstName").toString() + data.get("LastName").toString());
-                        nationalCode.setText(data.get("NationalCode").toString());
-                        phoneNumber.setText(data.get("PhoneNumber").toString());
-                        insurerDescription.setText(data.get("InsurerDescription").toString());
-                        policyFullNumber.setText(data.get("PolicyFullNumber").toString());
-                        address.setText(data.get("Address").toString());
-
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_layout, null);
-                        alertDialog.setView(view);
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "بازگشت",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
-                    } catch (JSONException e) {
+                         data = response.body().string();
+                         if (data.contains("\"Data\":null")){
+                             Snackbar snackbar = Snackbar.make(mRoot,"پیدا نشد", 3000);
+                             View view = snackbar.getView();
+                             FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)view.getLayoutParams();
+                             params.gravity = Gravity.TOP;
+                             view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                             view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+                             snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
+                             view.setLayoutParams(params);
+                             snackbar.show();
+                             return;
+                         }
+                         Intent intent = new Intent(getContext(), TrackReportActivity.class);
+                         intent.putExtra("Data", data);
+                         startActivity(intent);
+                    } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
@@ -111,12 +98,11 @@ public class TrackFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e("fail", "onFailure: " );
+                Log.e("fail", "onFailure: ");
             }
         });
 
     }
-
 
     private void initRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()

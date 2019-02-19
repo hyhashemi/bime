@@ -21,5 +21,7 @@ public class ReportActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("اعلام خسارت");
+
+
     }
 }

@@ -4,12 +4,17 @@ import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.bime.R;
 import com.example.bime.common.MainActivity;
@@ -50,12 +55,16 @@ public class ReportFragment extends Fragment {
     private EditText name;
     private EditText nationalId;
     private EditText insuranceId;
-    private EditText insuranceType;
     private Button button;
     private EditText phoneNumber;
     private EditText address;
     private EditText desc;
     private EditText state;
+    private Button selectFile;
+    private final static int PICKFILE_RESULT_CODE = 1;
+    private TextView fileName;
+    private Spinner spinner;
+    private ArrayAdapter<String> adapter;
 
     @Nullable
     @Override
@@ -73,13 +82,19 @@ public class ReportFragment extends Fragment {
         mDecoratedBarcodeView.setStatusText("کد QR بیمه نامه را اسکن کنید ");
         name = mViewRoot.findViewById(R.id.firstname);
         insuranceId = mViewRoot.findViewById(R.id.insuranceid);
-        insuranceType = mViewRoot.findViewById(R.id.insuranceType);
         nationalId = mViewRoot.findViewById(R.id.nationalCode);
         button = mViewRoot.findViewById(R.id.button);
         phoneNumber = mViewRoot.findViewById(R.id.phone);
         address = mViewRoot.findViewById(R.id.address);
         desc = mViewRoot.findViewById(R.id.description);
         state = mViewRoot.findViewById(R.id.state);
+        selectFile = mViewRoot.findViewById(R.id.file);
+        fileName = mViewRoot.findViewById(R.id.filename);
+        spinner = mViewRoot.findViewById(R.id.insuranceType);
+
+        String[] items = new String[]{"نوع بیمه", "بیمه شخص ثالث", "بیمه بدنه"};
+        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        spinner.setAdapter(adapter);
 
         initListener();
         initRetrofit();
@@ -87,7 +102,7 @@ public class ReportFragment extends Fragment {
 
     }
 
-    public void initListener() {
+    private void initListener() {
         mDecoratedBarcodeView.decodeContinuous(new BarcodeCallback() {
             @Override
             public void barcodeResult(BarcodeResult result) {
@@ -116,6 +131,28 @@ public class ReportFragment extends Fragment {
                 requestReport();
             }
         });
+
+        selectFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                startActivityForResult(intent, PICKFILE_RESULT_CODE);
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICKFILE_RESULT_CODE) {
+            Uri uri = Uri.parse(data.getData().getPath());
+            data.setDataAndType(uri, "resource/folder");
+            uri.getLastPathSegment();
+            String[] filepath = uri.toString().split("[/]");
+            fileName.setText(filepath[filepath.length - 1]);
+        }
     }
 
     private boolean checkFields() {
@@ -124,7 +161,6 @@ public class ReportFragment extends Fragment {
                         && !nationalId.getText().toString().equals("")
                         && !address.getText().toString().equals("")
                         && !insuranceId.getText().toString().equals("")
-                        && !insuranceType.getText().toString().equals("")
                         && !phoneNumber.getText().toString().equals("")
         );
     }
@@ -205,7 +241,7 @@ public class ReportFragment extends Fragment {
         Gson gson = new GsonBuilder().create();
         insuranceInfo = gson.fromJson(data.toString(), InsuranceInfo.class);
         name.setText(insuranceInfo.getName());
-        insuranceType.setText(insuranceInfo.getInsuranceField());
+        spinner.setSelection(Integer.parseInt(insuranceInfo.getInsuranceField()));
         insuranceId.setText(insuranceInfo.getPolicyUniqueNumber());
         nationalId.setText(insuranceInfo.getNationalCode());
     }
@@ -218,29 +254,21 @@ public class ReportFragment extends Fragment {
             lastName += fullName[i];
         }
         Call<ResponseBody> call = apiInterface.report(firstName, lastName, phoneNumber.getText().toString(),
-                "123456", address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
-                , desc.getText().toString(), 30, 50, 21, true, insuranceType.getText().toString(), "");
+                null, address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
+                , desc.getText().toString(), 30, 50, 1, true, 1, "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-               if (response.code() == 200){
-                   try {
-                       AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                       alertDialog.setTitle("کد پیگیری");
-                       alertDialog.setMessage(response.body().string());
-                       alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "ورود به صفحه نخست",
-                               new DialogInterface.OnClickListener() {
-                                   public void onClick(DialogInterface dialog, int which) {
-                                       dialog.dismiss();
-                                       Intent intent = new Intent(getContext(), MainActivity.class);
-                                       startActivity(intent);
-                                   }
-                               });
-                       alertDialog.show();
-                   } catch (IOException e) {
-                       e.printStackTrace();
-                   }
-               }
+                if (response.code() == 200) {
+                    try {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                        alertDialog.setTitle("کد پیگیری");
+                        alertDialog.setMessage(response.body().string());
+                        alertDialog.show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
 
             @Override

@@ -4,9 +4,9 @@
     android:layout_height="match_parent">
 
     <include layout="@layout/toolbar_everywhere" android:id="@+id/toolbar"/>
-    <com.mapbox.mapboxsdk.maps.MapView
-        android:id="@+id/paymentmapview"
+
+    <FrameLayout
+        android:id="@+id/trackreportcontainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
 </LinearLayout>

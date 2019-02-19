@@ -10,6 +10,7 @@ import com.example.bime.aboutus.AboutUsActivity;
 import com.example.bime.mobilepayment.MobilePaymentActivity;
 import com.example.bime.payment.PaymentActivity;
 import com.example.bime.report.ReportActivity;
+import com.example.bime.reportmap.DamageMapActivity;
 import com.example.bime.track.TrackActivity;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,10 +45,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initListeners() {
-        mReport.setOnClickListener(new View.OnClickListener() {
+                mReport.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), ReportActivity.class);
+                Intent intent = new Intent(getApplicationContext(), DamageMapActivity.class);
                 startActivity(intent);
             }
         });

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_everywhere" android:id="@+id/toolbar"/>
+
+   <FrameLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content">
+       <com.mapbox.mapboxsdk.maps.MapView
+           android:id="@+id/paymentmapview"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent" />
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:background="@drawable/buttonbackground"
+           android:clickable="true"
+           android:text="ثبت موقعیت"
+           android:textStyle="bold"
+           android:textSize="@dimen/Subtitle1"
+           android:textColor="#FFFFFF"
+           android:layout_marginBottom="11dp"
+           android:layout_gravity="bottom|center_horizontal"
+           android:id="@+id/setlocationbutton"/>
+   </FrameLayout>
+</LinearLayout>

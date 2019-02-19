@@ -27,17 +27,12 @@ public interface ApiInterface {
                               @Field("Password") String password, @Field("Address") String address, @Field("NationalCode") String nationalCode,
                               @Field("PolicyFullNumber") String policyFullNumber, @Field("InsurerDescription") String insuranceDesc, @Field("Latitude") double latitude,
                               @Field("Longitude") double longitude, @Field("StateProvinceId") int stateProvinceId,
-                              @Field("UserLoggedIn") boolean userLoggedIn, @Field("PolicyType") String policyType, @Field("FilePath") String filePath);
-
-    @Headers("x-api-key: 676bdb1ce2d84276b8874a41f143c739")
-    @FormUrlEncoded
-    @POST("api/Damage/Tracking")
-    Call<ResponseBody> track(@Field("referenceCode") String referenceCode, @Field("nationalCode") String nationalCode);
+                              @Field("UserLoggedIn") boolean userLoggedIn, @Field("PolicyType") int policyType, @Field("FilePath") String filePath,
+                              @Field("GeoLocation") String geo);
 
 
     @Headers("x-api-key: 676bdb1ce2d84276b8874a41f143c739")
-    @FormUrlEncoded
     @POST("api/Damage/Tracking")
-    Call<ResponseBody> track(@Field("referenceCode") String trackId, @Field("nationalCode") String nationalCode);
+    Call<ResponseBody> track(@Query("referenceCode") String trackId, @Query("nationalCode") String nationalCode);
 
 }
