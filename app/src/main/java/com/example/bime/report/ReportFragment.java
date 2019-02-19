@@ -265,7 +265,11 @@ public class ReportFragment extends Fragment {
     private void requestDamageReport() {
         String[] fullName = name.getText().toString().split(" ");
         String firstName = fullName[0];
-        String lastName = "";
+        String lastName = " ";
+
+        if (fullName.length == 1){
+            lastName = "-";
+        }
         for (int i = 1; i < fullName.length; i++) {
             lastName += fullName[i];
         }
@@ -274,7 +278,7 @@ public class ReportFragment extends Fragment {
         Call<ResponseBody> call = apiInterface.report(new ReportInfo(
                 firstName, lastName, phoneNumber.getText().toString(),
                 "123456", address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
-                , desc.getText().toString(), 30, 50, 1, true, 1, "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null
+                , desc.getText().toString(), 30, 50, 1, true, spinner.getSelectedItemPosition(), "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null
         ));
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -288,10 +292,10 @@ public class ReportFragment extends Fragment {
                         alertDialog.setMessage(jsonObject.getString("Data"));
                         alertDialog.show();
                     } catch (IOException e) {
-                       showSnackbar();
+                        showSnackbar();
                     } catch (JSONException e) {
                         showSnackbar();
-                    } catch (NullPointerException e){
+                    } catch (NullPointerException e) {
                         showSnackbar();
                     }
                 }
@@ -299,7 +303,6 @@ public class ReportFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
             }
         });
     }
@@ -315,17 +318,17 @@ public class ReportFragment extends Fragment {
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         httpClient.addInterceptor(new Interceptor() {
-                                      @Override
-                                      public okhttp3.Response intercept(Chain chain) throws IOException {
-                                          Request original = chain.request();
+            @Override
+            public okhttp3.Response intercept(Chain chain) throws IOException {
+                Request original = chain.request();
 
-                                          Request request = original.newBuilder()
-                                                  .header("x-api-key", "676bdb1ce2d84276b8874a41f143c739")
-                                                  .header("Authorization", token)
-                                                  .build();
-                                          return chain.proceed(request);
-                                      }
-                                  });
+                Request request = original.newBuilder()
+                        .header("x-api-key", "676bdb1ce2d84276b8874a41f143c739")
+                        .header("Authorization", token)
+                        .build();
+                return chain.proceed(request);
+            }
+        });
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://iloss.net/")
@@ -335,7 +338,7 @@ public class ReportFragment extends Fragment {
         apiInterface = retrofit.create(ApiInterface.class);
     }
 
-    private void showSnackbar(){
+    private void showSnackbar() {
         Snackbar snackbar = Snackbar.make(mViewRoot, "با خطا مواجه شد", 3000);
         View view = snackbar.getView();
         FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();

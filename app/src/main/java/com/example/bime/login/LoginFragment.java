@@ -69,7 +69,7 @@ public class LoginFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mButton.setEnabled(false);
                 Call<ResponseBody> call = apiInterface.login(mTextInputEditTextUsername.getText().toString(),
                         mTextInputEditTextPassword.getText().toString());
                 call.enqueue(new Callback<ResponseBody>() {
@@ -98,12 +98,14 @@ public class LoginFragment extends Fragment {
                             snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
                             view.setLayoutParams(params);
                             snackbar.show();
+                            mButton.setEnabled(true);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Log.e("onfail", "onFailure: ");
+                        mButton.setEnabled(true);
                     }
                 });
 

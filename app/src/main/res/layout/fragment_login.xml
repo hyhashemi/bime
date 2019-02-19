@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
+        android:layoutDirection="rtl"
         android:hint="رمز عبور"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorSecondary">
@@ -29,6 +30,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/loginpassword"
             android:layout_width="match_parent"
+            android:inputType="textPassword"
             android:layout_height="50dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
