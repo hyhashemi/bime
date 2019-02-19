@@ -46,6 +46,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -100,7 +101,7 @@ public class ReportFragment extends Fragment {
         spinner = mViewRoot.findViewById(R.id.insuranceType);
 
         String[] items = new String[]{"نوع بیمه", "بیمه شخص ثالث", "بیمه بدنه"};
-        adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
         spinner.setAdapter(adapter);
 
         initListener();
@@ -117,7 +118,7 @@ public class ReportFragment extends Fragment {
                 if (result != null && result.toString().contains("https://SanhabInq.centinsur.ir")) {
                     mDecoratedBarcodeView.pause();
                     String[] resultsplit = result.toString().split("[?]");
-                    requestId(resultsplit[1]);
+                    getInfoByScanId(resultsplit[1]);
                 } else {
                     mDecoratedBarcodeView.resume();
                 }
@@ -135,7 +136,7 @@ public class ReportFragment extends Fragment {
             public void onClick(View v) {
                 if (!checkFields())
                     return;
-                requestReport();
+                requestDamageReport();
             }
         });
 
@@ -154,11 +155,15 @@ public class ReportFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICKFILE_RESULT_CODE) {
-            Uri uri = Uri.parse(data.getData().getPath());
-            data.setDataAndType(uri, "resource/folder");
-            uri.getLastPathSegment();
-            String[] filepath = uri.toString().split("[/]");
-            fileName.setText(filepath[filepath.length - 1]);
+            try {
+                Uri uri = Uri.parse(data.getData().getPath());
+                data.setDataAndType(uri, "resource/folder");
+                uri.getLastPathSegment();
+                String[] filepath = uri.toString().split("[/]");
+                fileName.setText(filepath[filepath.length - 1]);
+            } catch (NullPointerException e) {
+
+            }
         }
     }
 
@@ -207,14 +212,14 @@ public class ReportFragment extends Fragment {
         super.onStart();
     }
 
-    private void requestId(String uniqueidentifier) {
+    private void getInfoByScanId(String uniqueidentifier) {
         Call<ResponseBody> call = apiInterface.getInfo(uniqueidentifier);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     try {
-                        putToFields(response.body().string());
+                        writeQrCodeResults(response.body().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -228,30 +233,8 @@ public class ReportFragment extends Fragment {
         });
     }
 
-    private void initRetrofit() {
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        final String token = preferences.getString("token", null);
-        if(token == null)
-            return;
-
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.addInterceptor(new Interceptor() {
-            @Override
-            public okhttp3.Response intercept(Chain chain) throws IOException {
-                Request request = chain.request().newBuilder().addHeader("Authorization", token).build();
-                return chain.proceed(request);
-            }
-        });
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://iloss.net/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpClient.build())
-                .build();
-        apiInterface = retrofit.create(ApiInterface.class);
-    }
-
-    private void putToFields(String body) {
+    private void writeQrCodeResults(String body) {
         JSONObject data = null;
         try {
             JSONObject reader = new JSONObject(body);
@@ -261,6 +244,10 @@ public class ReportFragment extends Fragment {
             e.printStackTrace();
         }
         Gson gson = new GsonBuilder().create();
+
+        if (data == null)
+            return;
+
         insuranceInfo = gson.fromJson(data.toString(), InsuranceInfo.class);
         if (insuranceInfo.getName() != null) {
             name.setText(insuranceInfo.getName());
@@ -275,7 +262,7 @@ public class ReportFragment extends Fragment {
 
     }
 
-    private void requestReport() {
+    private void requestDamageReport() {
         String[] fullName = name.getText().toString().split(" ");
         String firstName = fullName[0];
         String lastName = "";
@@ -286,38 +273,27 @@ public class ReportFragment extends Fragment {
 
         Call<ResponseBody> call = apiInterface.report(new ReportInfo(
                 firstName, lastName, phoneNumber.getText().toString(),
-                null, address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
+                "123456", address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
                 , desc.getText().toString(), 30, 50, 1, true, 1, "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null
         ));
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if (response.code() == 200) {
-                        if (response.body().string().contains("Data\":null")) {
-                            Snackbar snackbar = Snackbar.make(mViewRoot, "با خطا مواجه شد", 3000);
-                            View view = snackbar.getView();
-                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-                            params.gravity = Gravity.TOP;
-                            view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                            view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
-                            snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
-                            view.setLayoutParams(params);
-                            snackbar.show();
-                            return;
-                        }
-                        try {
-                            AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                            alertDialog.setTitle("کد پیگیری");
-                            String[] str = response.body().string().split("[\"]");
-                            alertDialog.setMessage(str[str.length - 2]);
-                            alertDialog.show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                if (response.code() == 200) {
+                    try {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
+                        alertDialog.setTitle("کد پیگیری");
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        alertDialog.setMessage(jsonObject.getString("Data"));
+                        alertDialog.show();
+                    } catch (IOException e) {
+                       showSnackbar();
+                    } catch (JSONException e) {
+                        showSnackbar();
+                    } catch (NullPointerException e){
+                        showSnackbar();
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
 
@@ -328,4 +304,46 @@ public class ReportFragment extends Fragment {
         });
     }
 
+
+    private void initRetrofit() {
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final String token = preferences.getString("token", null);
+        if (token == null)
+            return;
+
+
+        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        httpClient.addInterceptor(new Interceptor() {
+                                      @Override
+                                      public okhttp3.Response intercept(Chain chain) throws IOException {
+                                          Request original = chain.request();
+
+                                          Request request = original.newBuilder()
+                                                  .header("x-api-key", "676bdb1ce2d84276b8874a41f143c739")
+                                                  .header("Authorization", token)
+                                                  .build();
+                                          return chain.proceed(request);
+                                      }
+                                  });
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://iloss.net/")
+                .client(httpClient.build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiInterface = retrofit.create(ApiInterface.class);
+    }
+
+    private void showSnackbar(){
+        Snackbar snackbar = Snackbar.make(mViewRoot, "با خطا مواجه شد", 3000);
+        View view = snackbar.getView();
+        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        params.gravity = Gravity.TOP;
+        view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+        view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
+        snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
+        view.setLayoutParams(params);
+        snackbar.show();
+    }
 }

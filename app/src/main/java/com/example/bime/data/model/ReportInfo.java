@@ -25,20 +25,28 @@ public class ReportInfo implements Serializable {
 
     @SerializedName("PolicyFullNumber")
     String policyFullNumber;
+
     @SerializedName("InsurerDescription")
     String insuranceDesc;
+
     @SerializedName("Latitude")
     double latitude;
+
     @SerializedName("Longitude")
     double longitude;
+
     @SerializedName("StateProvinceId")
     int stateProvinceId;
+
     @SerializedName("UserLoggedIn")
     boolean userLoggedIn;
+
     @SerializedName("PolicyType")
     int policyType;
+
     @SerializedName("FilePath")
     String filePath;
+
     @SerializedName("GeoLocation")
     String geo;
 
@@ -57,13 +65,11 @@ public class ReportInfo implements Serializable {
         this.insuranceDesc = insuranceDesc;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.stateProvinceId= stateProvinceId;
+        this.stateProvinceId = stateProvinceId;
         this.userLoggedIn = userLoggedIn;
         this.policyType = policyType;
         this.filePath = filePath;
         this.geo = geo;
-
-
     }
 
 }
