@@ -18,7 +18,9 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.example.bime.R;
+import com.example.bime.base.BaseFragment;
 import com.example.bime.common.MainActivity;
+import com.example.bime.data.ApiClient;
 import com.example.bime.data.ApiInterface;
 import com.example.bime.data.model.User;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -36,13 +38,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class LoginFragment extends Fragment {
+public class LoginFragment extends BaseFragment {
 
     private View mRoot;
     private TextInputEditText mTextInputEditTextUsername;
     private TextInputEditText mTextInputEditTextPassword;
     private Button mButton;
-    private ApiInterface apiInterface;
 
     @Nullable
     @Override
@@ -55,7 +56,6 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initUiComponents();
-        initRetrofit();
         initListener();
     }
 
@@ -69,8 +69,9 @@ public class LoginFragment extends Fragment {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mButton.setEnabled(false);
-                Call<ResponseBody> call = apiInterface.login(mTextInputEditTextUsername.getText().toString(),
+
+                showMaterialDialog();
+                Call<ResponseBody> call = ApiClient.getAoiInterface().login(mTextInputEditTextUsername.getText().toString(),
                         mTextInputEditTextPassword.getText().toString());
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -86,26 +87,20 @@ public class LoginFragment extends Fragment {
                             editor.apply();
 
                             Intent intent = new Intent(getContext(), MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
 
                         } else {
-                            Snackbar snackbar = Snackbar.make(mRoot, "نام کاربری یا رمز عبور اشتباه است", 3000);
-                            View view = snackbar.getView();
-                            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-                            params.gravity = Gravity.TOP;
-                            view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-                            view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
-                            snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
-                            view.setLayoutParams(params);
-                            snackbar.show();
-                            mButton.setEnabled(true);
+                            showSnackbar(mRoot, "رمز عبور یا نام کاربری اشتباه است");
                         }
+
+                        dismissMaterialDialog();
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Log.e("onfail", "onFailure: ");
-                        mButton.setEnabled(true);
+                        dismissMaterialDialog();
                     }
                 });
 
@@ -113,12 +108,4 @@ public class LoginFragment extends Fragment {
         });
     }
 
-
-    private void initRetrofit() {
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://iloss.net/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        apiInterface = retrofit.create(ApiInterface.class);
-    }
 }

@@ -1,76 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layoutDirection="rtl">
+        android:layoutDirection="rtl"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="5dp"
             android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <EditText
+                    android:id="@+id/firstname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
+                    android:background="@drawable/boxborder"
                     android:hint="نام"
-                    android:id="@+id/firstname"
-                    android:padding="10dp"/>
+                    android:padding="10dp" />
+
+                <EditText
+                    android:id="@+id/lasttname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/boxborder"
+                    android:hint="نام خانوادگی"
+                    android:padding="10dp" />
 
                 <EditText
                     android:id="@+id/nationalCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
+                    android:background="@drawable/boxborder"
                     android:hint="کد ملی"
-                    android:padding="10dp"/>
+                    android:padding="10dp" />
 
                 <EditText
                     android:id="@+id/phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
+                    android:background="@drawable/boxborder"
                     android:hint="شماره تلفن"
-                    android:padding="10dp"/>
+                    android:padding="10dp" />
 
                 <EditText
                     android:id="@+id/insuranceid"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
+                    android:background="@drawable/boxborder"
                     android:hint="شماره بیمه نامه"
-                    android:padding="10dp"/>
+                    android:padding="10dp" />
 
-                <EditText
+                <Spinner
                     android:id="@+id/state"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/boxborder"
                     android:layout_margin="5dp"
-                    android:hint="استان"
-                    android:padding="10dp"/>
+                    android:background="@android:drawable/spinner_dropdown_background"
+                    android:layoutDirection="ltr"
+                    android:paddingRight="15dp"
+                    android:spinnerMode="dropdown"
+                    android:textDirection="rtl" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <com.journeyapps.barcodescanner.DecoratedBarcodeView
@@ -78,7 +90,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:layout_gravity="center"
-                    android:layout_margin="5dp"/>
+                    android:layout_margin="5dp" />
 
 
                 <Spinner
@@ -87,73 +99,64 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown"
                     android:layoutDirection="ltr"
-                    android:textDirection="rtl"
                     android:paddingRight="15dp"
-                     />
+                    android:spinnerMode="dropdown"
+                    android:textDirection="rtl" />
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#2196F3"
+                    android:padding="10dp"
+                    android:text="انتخاب فایل"
+                    android:textColor="#FFFFFF"
+                    android:textDirection="rtl" />
+
+                <TextView
+                    android:id="@+id/filename"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_margin="5dp">
-
-                    <Button
-                        android:id="@+id/file"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:backgroundTint="#2196F3"
-                        android:textDirection="rtl"
-                        android:text="انتخاب فایل"
-                        android:textColor="#FFFFFF"
-                        android:padding="10dp"/>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:id="@+id/filename"
-                        android:textColor="#000000"/>
-                </LinearLayout>
+                    android:layout_margin="5dp"
+                    android:textColor="#000000" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:layout_margin="5dp"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/address"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_margin="5dp"
-                android:hint="آدرس محل خسارت"
                 android:background="@drawable/boxborder"
-                android:padding="10dp"/>
+                android:hint="آدرس محل خسارت"
+                android:padding="10dp" />
 
             <EditText
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_margin="5dp"
-                android:hint="توضیحات"
                 android:background="@drawable/boxborder"
-                android:padding="10dp"/>
+                android:hint="توضیحات"
+                android:padding="10dp" />
         </LinearLayout>
 
         <Button
+            android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/button"
-            android:text="ارسال"
-            android:textSize="@dimen/Subtitle1"
             android:layout_gravity="center"
+            android:background="@drawable/buttonbackground"
+            android:text="ارسال"
             android:textColor="#FFFFFF"
-            android:background="@drawable/buttonbackground"/>
+            android:textSize="@dimen/Subtitle1" />
     </LinearLayout>
 
 </ScrollView>

@@ -7,23 +7,24 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.bime.R;
+import com.example.bime.base.BaseFragment;
+import com.example.bime.common.MainActivity;
 import com.example.bime.data.ApiInterface;
 import com.example.bime.data.model.InsuranceInfo;
 import com.example.bime.data.model.ReportInfo;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.zxing.ResultPoint;
@@ -31,48 +32,48 @@ import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ReportFragment extends Fragment {
+public class ReportFragment extends BaseFragment {
 
     private View mViewRoot;
     private static final int REQUEST_PERMISSION = 1;
     private DecoratedBarcodeView mDecoratedBarcodeView;
     private ApiInterface apiInterface;
     private InsuranceInfo insuranceInfo;
-    private EditText name;
+    private EditText firstName;
     private EditText nationalId;
     private EditText insuranceId;
     private Button button;
     private EditText phoneNumber;
     private EditText address;
     private EditText desc;
-    private EditText state;
+    private Spinner state;
     private Button selectFile;
     private final static int PICKFILE_RESULT_CODE = 1;
     private TextView fileName;
     private Spinner spinner;
     private ArrayAdapter<String> adapter;
+    private TextView lastname;
 
     @Nullable
     @Override
@@ -88,7 +89,8 @@ public class ReportFragment extends Fragment {
         mDecoratedBarcodeView = mViewRoot.findViewById(R.id.qrcodescanner_container);
         mDecoratedBarcodeView.setVisibility(View.VISIBLE);
         mDecoratedBarcodeView.setStatusText("کد QR بیمه نامه را اسکن کنید ");
-        name = mViewRoot.findViewById(R.id.firstname);
+        firstName = mViewRoot.findViewById(R.id.firstname);
+        lastname = mViewRoot.findViewById(R.id.lasttname);
         insuranceId = mViewRoot.findViewById(R.id.insuranceid);
         nationalId = mViewRoot.findViewById(R.id.nationalCode);
         button = mViewRoot.findViewById(R.id.button);
@@ -107,7 +109,41 @@ public class ReportFragment extends Fragment {
         initListener();
         initRetrofit();
         requestCameraPermission();
+        initStates();
 
+    }
+
+    private void initStates() {
+
+        apiInterface.getStates().enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.code() == 200){
+                    ArrayList<String> items = new ArrayList<>();
+                    items.add("استان را انتخاب کنید");
+                    try {
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        JSONArray jsonArray = jsonObject.getJSONArray("Data");
+                        for (int i=0 ; i < jsonArray.length(); i++){
+                            items.add(jsonArray.getJSONObject(i).getString("Name"));
+
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, items);
+                    state.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("state", "onFailure: " );
+            }
+        });
     }
 
     private void initListener() {
@@ -119,9 +155,8 @@ public class ReportFragment extends Fragment {
                     mDecoratedBarcodeView.pause();
                     String[] resultsplit = result.toString().split("[?]");
                     getInfoByScanId(resultsplit[1]);
-                } else {
-                    mDecoratedBarcodeView.resume();
                 }
+                mDecoratedBarcodeView.resume();
             }
 
             @Override
@@ -134,8 +169,10 @@ public class ReportFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!checkFields())
+                if (!checkFields()) {
+                    showSnackbar(mViewRoot, "لطفا همه اطلاعات را وارد کنید");
                     return;
+                }
                 requestDamageReport();
             }
         });
@@ -160,7 +197,7 @@ public class ReportFragment extends Fragment {
                 data.setDataAndType(uri, "resource/folder");
                 uri.getLastPathSegment();
                 String[] filepath = uri.toString().split("[/]");
-                fileName.setText(filepath[filepath.length - 1]);
+                fileName.setText("ضمیمه شد" + filepath[filepath.length - 1]);
             } catch (NullPointerException e) {
 
             }
@@ -169,11 +206,14 @@ public class ReportFragment extends Fragment {
 
     private boolean checkFields() {
         return (
-                !name.getText().toString().equals("")
+                !firstName.getText().toString().equals("") &&
+                        !lastname.getText().toString().equals("")
                         && !nationalId.getText().toString().equals("")
                         && !address.getText().toString().equals("")
                         && !insuranceId.getText().toString().equals("")
                         && !phoneNumber.getText().toString().equals("")
+                        && spinner.getSelectedItemId() != 0
+                        && state.getSelectedItemId() != 0
         );
     }
 
@@ -250,7 +290,13 @@ public class ReportFragment extends Fragment {
 
         insuranceInfo = gson.fromJson(data.toString(), InsuranceInfo.class);
         if (insuranceInfo.getName() != null) {
-            name.setText(insuranceInfo.getName());
+            String[] fullname = insuranceInfo.getName().split(" ");
+            String lastpart = "";
+            firstName.setText(fullname[0]);
+            for (int i = 1; i < fullname.length; i++) {
+                lastpart = lastpart + fullname[i];
+            }
+            lastname.setText(lastpart);
             if (insuranceInfo.getInsuranceField().equals("شخص ثالث")) {
                 spinner.setSelection(1);
             } else
@@ -263,22 +309,11 @@ public class ReportFragment extends Fragment {
     }
 
     private void requestDamageReport() {
-        String[] fullName = name.getText().toString().split(" ");
-        String firstName = fullName[0];
-        String lastName = " ";
-
-        if (fullName.length == 1){
-            lastName = "-";
-        }
-        for (int i = 1; i < fullName.length; i++) {
-            lastName += fullName[i];
-        }
-
-
+        showMaterialDialog();
         Call<ResponseBody> call = apiInterface.report(new ReportInfo(
-                firstName, lastName, phoneNumber.getText().toString(),
+                firstName.getText().toString(), lastname.getText().toString(), phoneNumber.getText().toString(),
                 "123456", address.getText().toString(), nationalId.getText().toString(), insuranceId.getText().toString()
-                , desc.getText().toString(), 30, 50, 1, true, spinner.getSelectedItemPosition(), "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null
+                , desc.getText().toString(), 30, 50, state.getSelectedItemPosition(), true, spinner.getSelectedItemPosition(), "~/Uploads/Damage/c74fe3f0f0734d34ba0b5109144f7afa-better.things.s01.e01.srt", null
         ));
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -286,23 +321,45 @@ public class ReportFragment extends Fragment {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     try {
-                        AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
-                        alertDialog.setTitle("کد پیگیری");
                         JSONObject jsonObject = new JSONObject(response.body().string());
-                        alertDialog.setMessage(jsonObject.getString("Data"));
-                        alertDialog.show();
+                        MaterialDialog.Builder mMaterialDialogBuilder = new MaterialDialog.Builder(getContext())
+                                .title("کد پیگیری")
+                                .neutralText("بازگشت به صفحه نخست")
+                                .content(jsonObject.get("Data").toString())
+                                .onNeutral(new MaterialDialog.SingleButtonCallback() {
+                                    @Override
+                                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                                        materialDialog.dismiss();
+                                        Intent intent = new Intent(getContext(), MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .cancelable(false);
+                        dismissMaterialDialog();
+                        materialDialog = mMaterialDialogBuilder.build();
+                        materialDialog.show();
                     } catch (IOException e) {
-                        showSnackbar();
+                        showSnackbar(mViewRoot, "با خطا مواجه شد");
+                        dismissMaterialDialog();
+                        materialDialog.dismiss();
                     } catch (JSONException e) {
-                        showSnackbar();
+                        showSnackbar(mViewRoot, "با خطا مواجه شد");
+                        dismissMaterialDialog();
+                        materialDialog.dismiss();
                     } catch (NullPointerException e) {
-                        showSnackbar();
+                        showSnackbar(mViewRoot, "با خطا مواجه شد");
+                        materialDialog.dismiss();
+                        dismissMaterialDialog();
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                materialDialog.dismiss();
+                dismissMaterialDialog();
+                showSnackbar(mViewRoot, "با خطا مواجه شد");
             }
         });
     }
@@ -338,15 +395,4 @@ public class ReportFragment extends Fragment {
         apiInterface = retrofit.create(ApiInterface.class);
     }
 
-    private void showSnackbar() {
-        Snackbar snackbar = Snackbar.make(mViewRoot, "با خطا مواجه شد", 3000);
-        View view = snackbar.getView();
-        FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
-        params.gravity = Gravity.TOP;
-        view.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
-        view.setBackgroundColor(getResources().getColor(R.color.design_default_color_error));
-        snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_FADE);
-        view.setLayoutParams(params);
-        snackbar.show();
-    }
 }
