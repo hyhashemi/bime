@@ -41,11 +41,11 @@ public class MobilePaymentActivity extends AppCompatActivity {
                     public void onStyleLoaded(@NonNull Style style) {
                         MarkerOptions markerOptions1 = new MarkerOptions();
                         markerOptions1.setPosition(new LatLng(35.735900, 51.335837));
-                        markerOptions1.setSnippet("سیار 1");
+                        markerOptions1.setSnippet(getString(R.string.mobilepayment1));
 
                         MarkerOptions markerOptions2 = new MarkerOptions();
                         markerOptions2.setPosition(new LatLng(35.735766, 51.374241));
-                        markerOptions2.setSnippet("سیار 2");
+                        markerOptions2.setSnippet(getString(R.string.mobilepayment2));
 
                         mapboxMap.addMarker(markerOptions2);
                         mapboxMap.addMarker(markerOptions1);

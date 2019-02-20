@@ -18,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.GravityEnum;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.bime.R;
 import com.example.bime.base.BaseFragment;
@@ -193,11 +194,15 @@ public class ReportFragment extends BaseFragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICKFILE_RESULT_CODE) {
             try {
+                if (data == null)
+                    return;
+
                 Uri uri = Uri.parse(data.getData().getPath());
                 data.setDataAndType(uri, "resource/folder");
                 uri.getLastPathSegment();
                 String[] filepath = uri.toString().split("[/]");
                 fileName.setText("ضمیمه شد" + filepath[filepath.length - 1]);
+
             } catch (NullPointerException e) {
 
             }
@@ -325,6 +330,8 @@ public class ReportFragment extends BaseFragment {
                         MaterialDialog.Builder mMaterialDialogBuilder = new MaterialDialog.Builder(getContext())
                                 .title("کد پیگیری")
                                 .neutralText("بازگشت به صفحه نخست")
+                                .contentGravity(GravityEnum.END)
+                                .titleGravity(GravityEnum.END)
                                 .content(jsonObject.get("Data").toString())
                                 .onNeutral(new MaterialDialog.SingleButtonCallback() {
                                     @Override
