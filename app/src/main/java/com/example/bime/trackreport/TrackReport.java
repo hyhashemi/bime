@@ -11,12 +11,19 @@ import android.widget.TextView;
 import com.example.bime.R;
 import com.example.bime.common.MainActivity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class TrackReport extends Fragment {
 
@@ -28,11 +35,14 @@ public class TrackReport extends Fragment {
     private TextView nationalCode;
     private View view;
     private Button button;
+    private String dataString;
+    private RecyclerView recyclerView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.alert_layout, container, false);
+        dataString = (String) getArguments().get("Data");
         return view;
     }
 
@@ -46,20 +56,46 @@ public class TrackReport extends Fragment {
         nationalCode = view.findViewById(R.id.nationalcode_value);
         phoneNumber = view.findViewById(R.id.phonenumber_value);
         button = view.findViewById(R.id.trackreportbutton);
+        recyclerView = view.findViewById(R.id.recyclerview);
 
-        String dataString = (String) getArguments().get("Data");
         JSONObject jsonArray = null;
+        JSONArray states = null;
         JSONObject data = null;
         try {
+//
+//            InputStream inputStream = getContext().getResources().openRawResource(R.raw.tracking);
+//
+//            int size = inputStream.available();
+//
+//            byte[] buffer = new byte[size];
+//
+//            inputStream.read(buffer);
+//
+//            inputStream.close();
+//
+//            dataString = new String(buffer, "UTF-8");
             jsonArray = new JSONObject(dataString);
             data = jsonArray.getJSONObject("Data");
+            states = data.getJSONArray("States");
         } catch (JSONException e) {
             e.printStackTrace();
+        }
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        if (states != null && states.length() != 0) {
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(layoutManager);
+            TrackReportAdapter adapter = new TrackReportAdapter(states);
+            recyclerView.setAdapter(adapter);
         }
 
         try {
             if (data != null && data.get("InsurerDescription") != null) {
-                name.setText(data.get("FirstName") + data.get("LastName").toString());
+                name.setText(data.get("FirstName") + " " + data.get("LastName").toString());
                 nationalCode.setText(data.get("NationalCode").toString());
                 phoneNumber.setText(data.get("MobileNumber").toString());
                 insurerDescription.setText(data.get("InsurerDescription").toString());
@@ -74,6 +110,7 @@ public class TrackReport extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             }
         });

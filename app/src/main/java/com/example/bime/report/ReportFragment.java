@@ -201,7 +201,7 @@ public class ReportFragment extends BaseFragment {
                 data.setDataAndType(uri, "resource/folder");
                 uri.getLastPathSegment();
                 String[] filepath = uri.toString().split("[/]");
-                fileName.setText("ضمیمه شد" + filepath[filepath.length - 1]);
+                fileName.setText(filepath[filepath.length - 1]);
 
             } catch (NullPointerException e) {
 

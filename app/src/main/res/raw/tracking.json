@@ -1,0 +1,81 @@
+{
+  "Result": 0,
+  "Data": {
+    "LossType": 2,
+    "Id": 3,
+    "UserId": 1,
+    "FirstName": "مهدی",
+    "LastName": "عباسپور",
+    "MobileNumber": "09123467057",
+    "Password": null,
+    "NationalCode": "0078896290",
+    "ReferenceCode": "D3",
+    "PolicyFullNumber": "123",
+    "InsurerDescription": "تهران",
+    "PhotoFilePath": "~/Uploads/Damage/a8b1255763f24c8c95d3843e360dbc6a-favicon.ico",
+    "VoiceFilePath": null,
+    "StateProvinceId": 1,
+    "LocationLatitude": 35.7011141221159,
+    "LocationLongitude": 51.4175255006747,
+    "Address": "تهران",
+    "Status": 10,
+    "States": [
+      {
+        "StateTitle": "ارسال شد به مالی",
+        "StateDescription": "ارسال شد به مالی",
+        "CreateDateString": "1397/11/17 04:23:28 صبح",
+        "CreateDate": "2019-02-06T04:23:28.083",
+        "PassDate": null
+      },
+      {
+        "StateTitle": "کارشناسی نهایی شد",
+        "StateDescription": "پرداخت شود",
+        "CreateDateString": "1397/11/17 04:23:28 صبح",
+        "CreateDate": "2019-02-06T04:23:28.083",
+        "PassDate": "2019-02-06T04:23:28.083"
+      },
+      {
+        "StateTitle": "کارشناسی شد",
+        "StateDescription": "یبلبلیبل",
+        "CreateDateString": "1397/11/17 04:22:03 صبح",
+        "CreateDate": "2019-02-06T04:22:03.863",
+        "PassDate": "2019-02-06T04:23:28.083"
+      },
+      {
+        "StateTitle": "کارشناس ارزیاب انتصاب یافت",
+        "StateDescription": "",
+        "CreateDateString": "1397/11/17 04:17:13 صبح",
+        "CreateDate": "2019-02-06T04:17:13.94",
+        "PassDate": "2019-02-06T04:22:03.863"
+      },
+      {
+        "StateTitle": "توسط کارشناش خارجی، کارشناسی شد",
+        "StateDescription": "سلام",
+        "CreateDateString": "1397/11/17 04:17:13 صبح",
+        "CreateDate": "2019-02-06T04:17:13.94",
+        "PassDate": "2019-02-06T04:17:13.94"
+      },
+      {
+        "StateTitle": "به کارشناس ارزیاب خارجی انتصاب یافت",
+        "StateDescription": "سلام",
+        "CreateDateString": "1397/11/17 04:15:25 صبح",
+        "CreateDate": "2019-02-06T04:15:25.463",
+        "PassDate": "2019-02-06T04:17:13.94"
+      },
+      {
+        "StateTitle": "کارشناس ارزیاب انتصاب یافت",
+        "StateDescription": "",
+        "CreateDateString": "1397/11/17 04:08:26 صبح",
+        "CreateDate": "2019-02-06T04:08:26.86",
+        "PassDate": "2019-02-06T04:15:25.463"
+      },
+      {
+        "StateTitle": "در انتظار انتصاب به ارزیاب",
+        "StateDescription": "",
+        "CreateDateString": "1397/11/17 04:08:26 صبح",
+        "CreateDate": "2019-02-06T04:08:26.103",
+        "PassDate": "2019-02-06T04:08:26.86"
+      }
+    ]
+  }
+}

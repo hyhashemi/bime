@@ -3,33 +3,25 @@ package com.example.bime.track;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 
 import com.example.bime.R;
 import com.example.bime.base.BaseFragment;
 import com.example.bime.data.ApiClient;
-import com.example.bime.data.ApiInterface;
 import com.example.bime.trackreport.TrackReportActivity;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.io.IOException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TrackFragment extends BaseFragment {
 
@@ -67,22 +59,26 @@ public class TrackFragment extends BaseFragment {
 
     private void requestTrack() {
         Call<ResponseBody> call = ApiClient.getAoiInterface().track(trackId.getText().toString(), nationalId.getText().toString());
+        showMaterialDialog();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (response.code() == 200) {
                     String data = "";
                     try {
-                         data = response.body().string();
-                         if (data.contains("\"Data\":null")){
+                        data = response.body().string();
+                        if (data.contains("\"Data\":null")) {
+                            dismissMaterialDialog();
                             showSnackbar(mRoot, "پرونده خسارت پیدا نشد");
-                             return;
-                         }
-                         Intent intent = new Intent(getContext(), TrackReportActivity.class);
-                         intent.putExtra("Data", data);
-                         startActivity(intent);
+                            return;
+                        }
+                        dismissMaterialDialog();
+                        Intent intent = new Intent(getContext(), TrackReportActivity.class);
+                        intent.putExtra("Data", data);
+                        startActivity(intent);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        dismissMaterialDialog();
                     }
                 }
             }
@@ -90,6 +86,7 @@ public class TrackFragment extends BaseFragment {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.e("fail", "onFailure: ");
+                dismissMaterialDialog();
             }
         });
 
